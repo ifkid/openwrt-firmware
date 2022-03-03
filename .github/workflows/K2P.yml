@@ -30,8 +30,8 @@ env:
   DIY_P2_SH: scripts/diy-part2.sh
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: true
+  UPLOAD_WWS: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
@@ -110,7 +110,7 @@ jobs:
         if: (!cancelled())
         run: df -hT
 
-      - name: 上传软件包
+      - name: 上传源码文件
         uses: actions/upload-artifact@main
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
@@ -126,12 +126,30 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "::set-output name=status::success"
 
-      - name: 上传固件
+      - name: 上传固件至Actions
         uses: actions/upload-artifact@main
         if: steps.manage.outputs.status == 'success' && !cancelled()
         with:
           name: openwrt-firmware-${{ env.DEVICE_NAME }}-${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
+
+      - name: 上传固件至wetransfer
+        id: wetransfer
+        if: steps.manage.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          ./transfer wet -s -p 16 --no-progess ${FIRMWARE} 2>&1 | TEE wetransfer.log
+          echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+          echo "::set-output name=url::$(cat wss.log | grep https | cut -f3 -d" ")"
+
+      - name: 上传固件至文叔叔
+        id: wss
+        if: steps.manage.outputs.status == 'success' && env.UPLOAD_WSS == 'true' && !cancelled()
+        run: |
+          curl -fsSL git.io/file-transfer | sh
+          ./transfer wss -s -p 16 --no-progess ${FIRMWARE} 2>&1 | TEE wss.log
+          echo "::warning file=wenshushu.cn::$(cat wetransfer.log | grep https)"
+          echo "::set-output name=url::$(cat wss.log | grep https | cut -f3 -d" ")"
 
       - name: 生成tag
         id: tag
@@ -139,8 +157,8 @@ jobs:
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
-          [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-          [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+          [ $env.UPLOAD_WETRANSFER = true ] && echo "🔗 [Wetransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+          [ $env.UPLOAD_WSS = true ] && echo "🔗 [文叔叔](${{ steps.wss.outputs.url }})" >> release.txt
           echo "::set-output name=status::success"
 
       - name: 发布固件

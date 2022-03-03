@@ -27,9 +27,9 @@ pushd package/community
 # rm -rf ../lean/luci-app-kodexplorer
 
 # Add immortalwrt's Packages AdGuard home广告过滤
-git clone --depth=1 -b openwrt-18.06 https://github.com/immortalwrt/packages
-git clone --depth=1 -b openwrt-18.06-k5.4 https://github.com/immortalwrt/luci
-cp -r ../luci/applications/luci-app-adguardhome ../package/lean/luci-app-adguardhome
+# git clone --depth=1 -b openwrt-18.06 https://github.com/immortalwrt/packages
+# git clone --depth=1 -b openwrt-18.06-k5.4 https://github.com/immortalwrt/luci
+# cp -r ../luci/applications/luci-app-adguardhome ../package/lean/luci-app-adguardhome
 
 # Add luci-app-passwall 科学上网
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
