@@ -1,0 +1,28 @@
+name: 编译测试
+
+on:
+  push:
+    tags:
+      - v*
+  repository_dispatch:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 测试
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检查
+        uses: actions/checkout@v3.0.0
+
+      - name: 生成tag
+        id: tag
+        uses: xom9ikk/version-by-tag@v1
+        with:
+          isUseGithubRunNumber: true
+          offset: 0
+
+      - name: 打印tag
+        id: print
+        run: |
+          echo "Tag: ${{ steps.tag.outputs.tag }}"
