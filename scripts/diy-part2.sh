@@ -42,13 +42,13 @@ git clone --depth=1 https://github.com/jerrykuku/luci-app-vssr
 # git clone --depth=1 https://github.com/ysc3839/luci-proto-minieap
 
 # Add ServerChan 微信/Telegram推送的插件
-git clone --depth=1 https://github.com/tty228/luci-app-serverchan
+# git clone --depth=1 https://github.com/tty228/luci-app-serverchan
 
 # Add OpenClash Clash代理客户端
 git clone --depth=1 -b master https://github.com/vernesong/OpenClash
 
 # Add luci-app-onliner 在线人员查看
-git clone --depth=1 https://github.com/rufengsuixing/luci-app-onliner
+# git clone --depth=1 https://github.com/rufengsuixing/luci-app-onliner
 
 # Add luci-app-diskman 磁盘管理工具
 git clone --depth=1 https://github.com/SuLingGG/luci-app-diskman
@@ -68,25 +68,25 @@ rm -rf ../lean/luci-theme-argon
 # Add subconverter 科学上网配置文件订阅
 git clone --depth=1 https://github.com/tindy2013/openwrt-subconverter
 
-# Add luci-udptools
-svn co https://github.com/zcy85611/Openwrt-Package/trunk/luci-udptools
-svn co https://github.com/zcy85611/Openwrt-Package/trunk/udp2raw
-svn co https://github.com/zcy85611/Openwrt-Package/trunk/udpspeeder-tunnel
+# # Add luci-udptools udp工具
+# svn co https://github.com/zcy85611/Openwrt-Package/trunk/luci-udptools
+# svn co https://github.com/zcy85611/Openwrt-Package/trunk/udp2raw
+# svn co https://github.com/zcy85611/Openwrt-Package/trunk/udpspeeder-tunnel
 
-# Add OpenAppFilter
-git clone --depth 1 -b oaf-3.0.1 https://github.com/destan19/OpenAppFilter.git
+# Add OpenAppFilter 家长控制
+# git clone --depth 1 -b oaf-3.0.1 https://github.com/destan19/OpenAppFilter.git
 
 # Add luci-app-oled (R2S Only)  开启OLED显示
 # git clone --depth=1 https://github.com/NateLol/luci-app-oled
 
 # Add luci-app-filetransfer  #文件传输
-git clone --depth=1 https://github.com/Porcat/luci-app-filetransfer
+# git clone --depth=1 https://github.com/Porcat/luci-app-filetransfer
 
-# Add luci-app-ramfree 内存释放
-git clone --depth=1 https://github.com/chinaboy2345/luci-app-ramfree
+# # Add luci-app-ramfree 内存释放
+# git clone --depth=1 https://github.com/chinaboy2345/luci-app-ramfree
 
-# Add luci-app-turboacc 网络加速
-git clone --depth=1 https://github.com/imapproxy/luci-app-turboacc
+# # Add luci-app-turboacc 网络加速
+# git clone --depth=1 https://github.com/imapproxy/luci-app-turboacc
 
 # Add extra wireless drivers
 svn co https://github.com/immortalwrt/immortalwrt/branches/openwrt-18.06-k5.4/package/kernel/rtl8812au-ac
