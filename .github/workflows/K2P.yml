@@ -30,8 +30,8 @@ env:
   DIY_P2_SH: scripts/diy-part2.sh
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
-  UPLOAD_WETRANSFER: true
-  UPLOAD_WWS: true
+  UPLOAD_WETRANSFER: false
+  UPLOAD_WWS: false
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
@@ -110,7 +110,7 @@ jobs:
         if: (!cancelled())
         run: df -hT
 
-      - name: 上传源码文件
+      - name: 上传软件包
         uses: actions/upload-artifact@main
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
@@ -126,7 +126,7 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "::set-output name=status::success"
 
-      - name: 上传固件至Actions
+      - name: 上传固件至actions
         uses: actions/upload-artifact@main
         if: steps.manage.outputs.status == 'success' && !cancelled()
         with:
@@ -138,7 +138,7 @@ jobs:
         if: steps.manage.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progess ${FIRMWARE} 2>&1 | TEE wetransfer.log
+          ./transfer wet -s -p 16 --no-progess ${FIRMWARE} 2>&1 | tee wetransfer.log
           echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
           echo "::set-output name=url::$(cat wss.log | grep https | cut -f3 -d" ")"
 
@@ -147,7 +147,7 @@ jobs:
         if: steps.manage.outputs.status == 'success' && env.UPLOAD_WSS == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wss -s -p 16 --no-progess ${FIRMWARE} 2>&1 | TEE wss.log
+          ./transfer wss -s -p 16 --no-progess ${FIRMWARE} 2>&1 | tee wss.log
           echo "::warning file=wenshushu.cn::$(cat wetransfer.log | grep https)"
           echo "::set-output name=url::$(cat wss.log | grep https | cut -f3 -d" ")"
 
@@ -161,7 +161,7 @@ jobs:
           [ $env.UPLOAD_WSS = true ] && echo "🔗 [文叔叔](${{ steps.wss.outputs.url }})" >> release.txt
           echo "::set-output name=status::success"
 
-      - name: 发布固件
+      - name: 发布固件至release
         uses: softprops/action-gh-release@v1
         if: steps.tag.outputs.status == 'success' && !cancelled()
         env:
@@ -170,18 +170,10 @@ jobs:
           tag_name: ${{ steps.tag.outputs.release_tag }}
           body_path: release.txt
           files: ${{ env.FIRMWARE }}/*
+          token: ${{ steps.tag.outputs.release_tag }}
 
       - name: 结束编译
         uses: GitRML/delete-workflow-runs@main
         with:
           retain_days: 30
           keep_minimum_runs: 5
-
-      # - name: 移除旧发行版固件
-      #   uses: dev-drprasad/delete-older-releases@v0.1.0
-      #   if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      #   with:
-      #     keep_latest: 20
-      #     delete_tags: true
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
