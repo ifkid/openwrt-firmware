@@ -31,7 +31,7 @@ env:
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_WETRANSFER: true
-  UPLOAD_WWS: true
+  UPLOAD_WSS: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
@@ -126,7 +126,7 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "::set-output name=status::success"
 
-      - name: 上传固件至actions
+      - name: 上传固件至Artifacts
         uses: actions/upload-artifact@main
         if: steps.manage.outputs.status == 'success' && !cancelled()
         with:
@@ -140,7 +140,7 @@ jobs:
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progess ${FIRMWARE} 2>&1 | tee wetransfer.log
           echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-          echo "::set-output name=url::$(cat wss.log | grep https | cut -f3 -d" ")"
+          echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
       - name: 上传固件至文叔叔
         id: wss
@@ -170,7 +170,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.release_tag }}
           body_path: release.txt
           files: ${{ env.FIRMWARE }}/*
-          token: ${{ secrets.RELEASE_TOKEN }}
+          # token: ${{ secrets.RELEASE_TOKEN }}
 
       - name: 结束编译
         uses: GitRML/delete-workflow-runs@main
