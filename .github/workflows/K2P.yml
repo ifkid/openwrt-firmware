@@ -138,7 +138,7 @@ jobs:
         if: steps.manage.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progess ${FIRMWARE} 2>&1 | tee wetransfer.log
+          ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
           echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
           echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
@@ -147,7 +147,7 @@ jobs:
         if: steps.manage.outputs.status == 'success' && env.UPLOAD_WSS == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wss -s -p 16 --no-progess ${FIRMWARE} 2>&1 | tee wss.log
+          ./transfer wss -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wss.log
           echo "::warning file=wenshushu.cn::$(cat wetransfer.log | grep https)"
           echo "::set-output name=url::$(cat wss.log | grep https | cut -f3 -d" ")"
 
